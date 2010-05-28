@@ -1,0 +1,16 @@
+Automatic Differentiation in R
+
+rdx is a package to compute derivatives (of any order) of native R code
+for multivariate functions with vector outputs, f:R^m → R^n, through
+Automatic Differentiation (AD). Numerical evaluation of derivatives
+has widespread uses in many fields. rdx will implement two modes for
+the computation of derivatives, the Forward and Reverse modes of AD,
+combining which we can efficiently compute Jacobians and Hessians. Higher
+order derivatives will be evaluated through Univariate Taylor Propagation.
+
+TODO:
+* Implement both forward and reverse mode of automatic differentiation
+* Evaluation of first and higher order derivatives of vector functions
+* Compute higher order derivatives very quickly
+* Derivative matrices - Jacobians, Hessians
+* Write a unit test suite
