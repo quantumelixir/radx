@@ -63,6 +63,13 @@ t_example <- function(x) {
 ###############
 # f: R^m -> R #
 ###############
+t_bivariate <- function(x) {
+    return(exp(x[1]) * log(1 + x[2]))
+}
+
+t_multivariate <- function(x) {
+    return(sum(sin(x)))
+}
 
 #################
 # f: R^m -> R^n #
