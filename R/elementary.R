@@ -90,7 +90,7 @@
 
         s_coeff[1] <- sin(x$coeff[1])
         c_coeff[1] <- cos(x$coeff[1])
-        for (k in seq(x$ndirs))
+        for (p in seq(x$ndirs))
             for (d in seq(x$ord)) {
                 s <- (p - 1) * x$ord
 

@@ -26,7 +26,7 @@
 "-.radx" <- function (x, y=NULL) {
     # unary negation
     if (is.null(y)) {
-        return(radx_from(-x$coeff))
+        return(radx_from(-x$coeff, ndirs=x$ndirs))
     }
 
     if (class(x) != "radx")
