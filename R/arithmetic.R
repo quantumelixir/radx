@@ -12,15 +12,15 @@
 
     coeff <- x$coeff
     if (class(y) == "radx") {
-        if (x$ord != y$ord)
-            stop("Error: '+' applied to radx objects of differing orders")
+        if (x$ord != y$ord || x$ndirs != y$ndirs)
+            stop("Error: '+' applied to radx objects of differing orders and/or directions")
         coeff <- coeff + y$coeff
     }
     else { #numeric
         coeff[1] <- coeff[1] + y
     }
 
-    return(radx_from(coeff))
+    return(radx_from(coeff, ndirs=x$ndirs))
 }
 
 "-.radx" <- function (x, y=NULL) {
@@ -34,8 +34,8 @@
 
     coeff <- x$coeff
     if (class(y) == "radx") {
-        if (x$ord != y$ord)
-            stop("Error: '-' applied to radx objects of differing orders")
+        if (x$ord != y$ord || x$ndirs != y$ndirs)
+            stop("Error: '-' applied to radx objects of differing orders and/or directions")
 
         coeff <- coeff - y$coeff
     }
@@ -43,60 +43,73 @@
         coeff[1] <- coeff[1] - y
     }
 
-    return(radx_from(coeff))
+    return(radx_from(coeff, ndirs=x$ndirs))
 }
 
 "*.radx" <- function (x, y) {
     if (class(x) != "radx") {
         coeff <- x * y$coeff
+        return(radx_from(coeff, ndirs=y$ndirs))
     }
     else if (class(y) == "radx") {
-        if (x$ord != y$ord)
-            stop("Error: '*' applied to radx objects of differing orders")
+        if (x$ord != y$ord || x$ndirs != y$ndirs)
+            stop("Error: '*' applied to radx objects of differing orders and/or directions")
 
-        coeff <- rep(0, x$ord + 1)
+        coeff <- rep(0, length(x$coeff))
         coeff[1] <- x$coeff[1] * y$coeff[1]
         if(x$ord)
-            for (k in seq(x$ord)) {
-                i <- 0
-                while (i <= k) {
-                    coeff[k + 1] <- coeff[k + 1] + x$coeff[i + 1] * y$coeff[k - i + 1] / (base::factorial(i) * base::factorial(k - i))
-                    i <- i + 1
+            for (p in seq(x$ndirs))
+                for (d in seq(x$ord)) {
+                    s <- (p - 1) * x$ord
+
+                    coeff[s + d + 1] <- x$coeff[1] * y$coeff[s + d + 1] / base::factorial(d)
+                    i <- 1
+                    while (i < d) {
+                        coeff[s + d + 1] <- coeff[s + d + 1] + x$coeff[s + i + 1] * y$coeff[s + d - i + 1] / (base::factorial(i) * base::factorial(d - i))
+                        i <- i + 1
+                    }
+                    coeff[s + d + 1] <- coeff[s + d + 1] + x$coeff[s + d + 1] * y$coeff[1] / base::factorial(d)
+
+                    coeff[s + d + 1] <- coeff[s + d + 1] * base::factorial(d)
                 }
-                coeff[k + 1] <- coeff[k + 1] * base::factorial(k)
-            }
     }
     else { #numeric
         coeff <- y * x$coeff
     }
 
-    return(radx_from(coeff))
+    return(radx_from(coeff, ndirs=x$ndirs))
 }
 
 "/.radx" <- function (x, y) {
     if (class(x) != "radx") {
         # replace with specific code for constant / y
-        return(radx_from(c(x, rep(0, y$ord))) / y)
+        return(radx_from(c(x, rep(0, length(y$coeff) - 1)), ndirs=y$ndirs) / y)
     }
     else if (class(y) == "radx") {
-        if (x$ord != y$ord)
-            stop("Error: '/' applied to radx objects of differing orders")
+        if (x$ord != y$ord || x$ndirs != y$ndirs)
+            stop("Error: '/' applied to radx objects of differing orders and/or directions")
 
-        coeff <- rep(0, x$ord + 1)
+        coeff <- rep(0, length(x$coeff))
         coeff[1] <- x$coeff[1] / y$coeff[1]
-        for (k in seq(x$ord)) {
-            i <- 0
-            while (i < k) {
-                coeff[k + 1] <- coeff[k + 1] + coeff[i + 1] * y$coeff[k - i + 1] /(base::factorial(i) * base::factorial(k - i))
-                i <- i + 1
-            }
-            coeff[k + 1] <- base::factorial(k) * (x$coeff[k + 1] - coeff[k + 1]) / y$coeff[1]
-        }
+        if(x$ord)
+            for (p in seq(x$ndirs))
+                for (d in seq(x$ord)) {
+                    s <- (p - 1) * x$ord
+
+                    coeff[s + d + 1] <- coeff[1] * y$coeff[s + d + 1] / base::factorial(d)
+                    i <- 1
+                    while (i < d) {
+                        coeff[s + d + 1] <- coeff[s + d + 1] + coeff[s + i + 1] * y$coeff[s + d - i + 1] /(base::factorial(i) * base::factorial(d - i))
+                        i <- i + 1
+                    }
+
+                    coeff[s + d + 1] <- base::factorial(d) * (x$coeff[s + d + 1] - coeff[s + d + 1]) / y$coeff[1]
+                }
     }
     else { #numeric
         coeff <- x$coeff / y
     }
 
-    return(radx_from(coeff))
+    return(radx_from(coeff, ndirs=x$ndirs))
 }
 
