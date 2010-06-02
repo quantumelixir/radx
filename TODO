@@ -1,0 +1,5 @@
+TODO
+====
+
+1. Sidestep factorial computation in coefficients (Switch from storing derivatives to taylor coefficients)
+2. Write C code for kernels
