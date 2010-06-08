@@ -1,4 +1,3 @@
-source("R/radx.R"); source("R/arithmetic.R"); source("R/elementary.R"); source("R/test.R");
 x <- radx(1, ord=5)
 x
 exp(x) * log(x)
