@@ -1,0 +1,13 @@
+export(radx, radx_from, radx_empty)
+S3method(print, radx)
+
+S3method('+', radx)
+S3method('-', radx)
+S3method('*', radx)
+S3method('/', radx)
+
+S3method('exp', radx)
+S3method('log', radx)
+S3method('^', radx)
+S3method('sin', radx)
+S3method('cos', radx)
