@@ -90,7 +90,7 @@ print.grad <- function (x) {
 }
 
 # f  = u * v
-# f' = u'v * uv'
+# f' = u'v + uv'
 "*.grad" <- function (x, y) {
     if (class(x) != "grad") {
         return(y * x)
