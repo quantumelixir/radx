@@ -20,7 +20,6 @@ radx <- function (val, type="variable", ord=1, ndirs=1, ray=TRUE) {
         {
             ad$coeff <- c(val, rep(rep(0, ord), ndirs))
             if (!isTRUE(ray)) {
-                cat('from: ', 2, ' to: ', length(ad$coeff) - ad$ord + 1, ' by: ', ad$ord, '\n')
                 ad$coeff[seq.int(2, length(ad$coeff) - ad$ord + 1, ad$ord)] <- ray
             }
         }
