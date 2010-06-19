@@ -27,6 +27,7 @@ fillMultiIndices <- function(i, j, n, v) {
 genMultiIndices <- function(N, V) {
     mat <<- matrix(nrow=choose(N + V - 1, V), ncol=N)
     fillMultiIndices(1, 1, N, V)
+    return(mat)
 }
 
 # compute choose(z, k) where z and k are multi-indices
@@ -49,7 +50,7 @@ singleTerm <- function(i, j, k, d) {
 }
 
 # compute the exact interpolation coefficients
-gammaMultiIndex <- function(i, j, d) {
+gammaMultiIndex <- function(i, j) {
     if (length(i) != length(j))
         stop('Error: Lengths of the multi-index arguments are unequal')
     if (absolute(i) != absolute(j))
@@ -68,6 +69,35 @@ gammaMultiIndex <- function(i, j, d) {
         }
     }
     return(gij)
+}
+
+# computes the interpolation coefficients for calculating
+# the partial derivative corresponding to a multi-index i
+gammaRow <- function(i) {
+    N <- length(i)
+    V <- absolute(i)
+    P <- choose(N + V - 1, V)
+
+    genMultiIndices(N, V)
+    gammarow <- matrix(nrow=1, ncol=P)
+    for (j in 1:P) {
+        gammarow[j] <- gammaMultiIndex(i, mat[j,])
+    }
+    return(gammarow)
+}
+
+# gamma matrix stores interpolation coefficients for all
+# (pure and mixed) derivatives of order V in N variables
+gammaMatrix <- function(N, V) {
+    genMultiIndices(N, V)
+    P <- choose(N + V - 1, V)
+    gammamatrix <- matrix(0, nrow=P, ncol=P)
+    for (i in 1:P) {
+        for (j in 1:P) {
+            gammamatrix[i,j] <- gammaMultiIndex(mat[i,], mat[j,])
+        }
+    }
+    return(gammamatrix)
 }
 
 # perform testing
