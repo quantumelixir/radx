@@ -14,7 +14,7 @@ fillMultiIndices <- function(i, j, n, v) {
     else {
         rowOffset <- 0
         # the first element of each multi-index can be any of 0, 1, ..., v
-        for (k in 0:v) {
+        for (k in v:0) {
             times <- choose((n - 1) + (v - k) - 1, (v - k))
             mat[(i + rowOffset):(i + rowOffset + times - 1), j] <<- k
             fillMultiIndices(i + rowOffset, j + 1, n - 1, v - k)
