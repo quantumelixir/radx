@@ -62,15 +62,13 @@
                 for (d in seq(x$ord)) {
                     s <- (p - 1) * x$ord
 
-                    coeff[s + d + 1] <- x$coeff[1] * y$coeff[s + d + 1] / base::factorial(d)
+                    coeff[s + d + 1] <- x$coeff[1] * y$coeff[s + d + 1]
                     i <- 1
                     while (i < d) {
-                        coeff[s + d + 1] <- coeff[s + d + 1] + x$coeff[s + i + 1] * y$coeff[s + d - i + 1] / (base::factorial(i) * base::factorial(d - i))
+                        coeff[s + d + 1] <- coeff[s + d + 1] + x$coeff[s + i + 1] * y$coeff[s + d - i + 1]
                         i <- i + 1
                     }
-                    coeff[s + d + 1] <- coeff[s + d + 1] + x$coeff[s + d + 1] * y$coeff[1] / base::factorial(d)
-
-                    coeff[s + d + 1] <- coeff[s + d + 1] * base::factorial(d)
+                    coeff[s + d + 1] <- coeff[s + d + 1] + x$coeff[s + d + 1] * y$coeff[1]
                 }
     }
     else { #numeric
@@ -96,14 +94,14 @@
                 for (d in seq(x$ord)) {
                     s <- (p - 1) * x$ord
 
-                    coeff[s + d + 1] <- coeff[1] * y$coeff[s + d + 1] / base::factorial(d)
+                    coeff[s + d + 1] <- coeff[1] * y$coeff[s + d + 1]
                     i <- 1
                     while (i < d) {
-                        coeff[s + d + 1] <- coeff[s + d + 1] + coeff[s + i + 1] * y$coeff[s + d - i + 1] /(base::factorial(i) * base::factorial(d - i))
+                        coeff[s + d + 1] <- coeff[s + d + 1] + coeff[s + i + 1] * y$coeff[s + d - i + 1]
                         i <- i + 1
                     }
 
-                    coeff[s + d + 1] <- base::factorial(d) * (x$coeff[s + d + 1] - coeff[s + d + 1]) / y$coeff[1]
+                    coeff[s + d + 1] <- (x$coeff[s + d + 1] - coeff[s + d + 1]) / y$coeff[1]
                 }
     }
     else { #numeric

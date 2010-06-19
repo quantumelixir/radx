@@ -1,5 +1,7 @@
 TODO
 ====
+* Write C code for kernels
 
-1. Sidestep factorial computation in coefficients (Switch from storing derivatives to taylor coefficients)
-2. Write C code for kernels
+DONE
+====
+* Sidestep factorial computation in coefficients (Switch from storing derivatives to taylor coefficients)
