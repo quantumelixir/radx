@@ -1,5 +1,7 @@
 TODO
 ====
+* Add UTP code for hyperbolic, trignometric and inverse trignometric functions
+* Create interface for computing derivative tensors (full and selected)
 * Write C code for kernels
 
 DONE
