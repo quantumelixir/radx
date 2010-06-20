@@ -5,7 +5,7 @@
 #   a. Computer answer to each case explicity instead of delegating
 #   b. Write code in C
 
-radx <- function (val, type="variable", ord=1, ndirs=1, ray=TRUE) {
+radx <- function (val, ord=1, ndirs=1, ray=TRUE) {
     if (ord < 0 || ndirs < 1)
         stop("Error: radx objects must have ord >= 0, dirs >= 1")
 
@@ -13,21 +13,18 @@ radx <- function (val, type="variable", ord=1, ndirs=1, ray=TRUE) {
     ad$ord <- ord
     ad$ndirs <- ndirs
 
-    if (type == "variable") {
-        if (ord == 0)
-            ad$coeff <- c(val)
-        else
-        {
-            ad$coeff <- c(val, rep(rep(0, ord), ndirs))
-            if (!isTRUE(ray)) {
-                ad$coeff[seq.int(2, length(ad$coeff) - ad$ord + 1, ad$ord)] <- ray
-            }
+    if (ord == 0)
+        ad$coeff <- c(val)
+    else
+    {
+        ad$coeff <- c(val, rep(rep(0, ord), ndirs))
+        if (!isTRUE(ray)) {
+            ad$coeff[seq.int(2, length(ad$coeff) - ad$ord + 1, ad$ord)] <- ray
+        }
+        else if (ad$ord > 0) {
+            ad$coeff[2] <- 1
         }
     }
-    else if (type == "constant")
-        ad$coeff <- c(val, rep(rep(0, ord), ndirs))
-    else
-        stop('Bad type: Choose between "variable" and "constant"')
 
     class(ad) <- "radx"
 
