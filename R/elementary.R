@@ -173,3 +173,7 @@
 
     return(radx_from(p_coeff, ndirs=x$ndirs))
 }
+
+"acot" <- function(x) {
+    return(-atan(x))
+}
