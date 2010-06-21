@@ -1,4 +1,4 @@
-# find number of multi-indices precedeing the given one
+# find number of multi-indices preceding the given one
 Nbefore <- function(J, n, v, cur=0) {
 	if (n <= 1 || J[1] == v) # none precedes J in this case
 		return(cur)
@@ -24,15 +24,22 @@ convert2pos <- function(mat) {
 }
 
 # Compute derivatives of the function f
-# around the point p upto the dth order
-# only -> matrix of multi-indices (one per row)
-# S    -> restrict to a subspace spanned by columns of S
-radxeval <- function(f, p, d, only=FALSE, S=FALSE) {
+# around a point upto the dth order
+# along -> matrix of multi-indices (one per row)
+# S     -> restrict to a subspace spanned by rows of S
+radxeval <- function(f, point, d=FALSE, along=FALSE, S=FALSE) {
+
+    if (identical(d, FALSE) && identical(along, FALSE)) {
+        stop('At least one of "d" or "along" must be specified.')
+    }
+
+    if (identical(d, FALSE)) {
+        d = sum(along[1,])
+    }
 
 	# function from f: R^N -> R^M
-	N <- length(p)
-	M <- length(do.call(f, as.list(p)))
-	P <- choose(N + d - 1, d)
+	N <- length(point)
+	M <- length(do.call(f, as.list(point)))
 
 	# S is the NxN identity matrix by default
 	if (identical(S, FALSE)) {
@@ -40,36 +47,31 @@ radxeval <- function(f, p, d, only=FALSE, S=FALSE) {
 		for (i in 1:N) 
 			S[i, i] <- 1
 	}
+    Nr <- dim(S)[1]
 
-	# FIXME: BUGGY!!
-	if (!identical(only, FALSE)) {
-		# compute only specified derivatives
-		J <- only
+    # If S is NrxN then J is PxNr
+    J <- genMultiIndices(Nr, d)
+    P <- dim(J)[1] # choose(Nr + d - 1, d)
 
-		# construct the interpolation matrix
-		gammamatrix <- matrix(0, nrow=dim(only)[1], ncol=P)
-		for (i in seq.int(dim(only)[1])) {
-			gammamatrix[i,] <- gammaRow(only[i,])
+	if (!identical(along, FALSE)) {
+		# construct a partial interpolation matrix
+		gammamatrix <- matrix(0, nrow=dim(along)[1], ncol=P)
+		for (i in seq.int(dim(along)[1])) {
+			gammamatrix[i,] <- gammaRow(along[i,])
 		}
-
-		indices <- 1 + d * convert2pos(only) - (d - 1)
 	}
 	else {
-		# compute full derivative tensor
-		J <- genMultiIndices(N, d)
-
-		# construct the interpolation matrix
-		gammamatrix <- gammaMatrix(N, d)
-
-		indices <- 1 + d * seq(P) - (d - 1)
+        # construct the full interpolation matrix
+		gammamatrix <- gammaMatrix(Nr, d)
 	}
 
+    # J:PxNr S:NrxN => rays:PxN
 	rays <- J %*% S
 
 	# Initialize the N P-directional d-order UTP variables
 	x <- matrix(0, nrow=N, ncol=1 + P*d)
-	x[,1] <- p
-
+	x[,1] <- point
+    indices <- 1 + d * seq(P) - (d - 1)
 	count <- 1
 	for (i in indices) {
 		x[,i] <- rays[count,]
@@ -82,15 +84,19 @@ radxeval <- function(f, p, d, only=FALSE, S=FALSE) {
 		l[[i]] <- radx_from(x[i,], ndirs=P)
 	}
 
-	# Propagate the UTPs!
-	fp <- do.call(f, l)
-	print(fp)
+    derivatives <- matrix(nrow=P, ncol=M)
 
-	# pick the highest order derivatives
-	dorder  <- fp$coeff[1 + d * seq(P)]
+    # Propagate the UTPs!
+    fp <- do.call(f, l)
 
-	# interpolate to find the derivatives
-	derivatives <- gammamatrix %*% dorder
+    # for each scalar in the vector output
+    for (m in seq.int(M)) {
+        # pick the dth order derivatives
+        dorder  <- fp[[m]]$coeff[1 + d * seq(P)]
+
+        # interpolate to find the derivatives
+        derivatives[, m] <- gammamatrix %*% dorder
+    }
 
 	return(derivatives)
 }

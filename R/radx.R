@@ -83,3 +83,8 @@ print.radx <- function (x) {
     cat("Directions  : ", x$ndirs, "\n", sep="")
     invisible(x)
 }
+
+# overload concatenation for radx objects
+c.radx <- function(...) {
+    return(list(...))
+}
