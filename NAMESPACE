@@ -1,5 +1,6 @@
 export(radx, radx_from, radx_empty)
 S3method(print, radx)
+S3method(c, radx)
 
 S3method('+', radx)
 S3method('-', radx)
@@ -11,5 +12,8 @@ S3method('log', radx)
 S3method('^', radx)
 S3method('sin', radx)
 S3method('cos', radx)
+S3method('atan', radx)
 
 export(genMultiIndices, gammaRow, gammaMatrix)
+
+export(radxeval, convert2pos)
