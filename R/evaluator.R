@@ -89,13 +89,19 @@ radxeval <- function(f, point, d=FALSE, along=FALSE, S=FALSE) {
     # Propagate the UTPs!
     fp <- do.call(f, l)
 
-    # for each scalar in the vector output
-    for (m in seq.int(M)) {
-        # pick the dth order derivatives
-        dorder  <- fp[[m]]$coeff[1 + d * seq(P)]
+    if (M > 1) {
+        # for each scalar in the vector output
+        for (m in seq.int(M)) {
+            # pick the dth order derivatives
+            dorder  <- fp[[m]]$coeff[1 + d * seq(P)]
 
-        # interpolate to find the derivatives
-        derivatives[, m] <- gammamatrix %*% dorder
+            # interpolate to find the derivatives
+            derivatives[, m] <- gammamatrix %*% dorder
+        }
+    }
+    else {
+            dorder  <- fp$coeff[1 + d * seq(P)]
+            derivatives[,1] <- gammamatrix %*% dorder
     }
 
 	return(derivatives)
