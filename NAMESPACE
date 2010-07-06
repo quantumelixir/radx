@@ -1,4 +1,4 @@
-export(radx, radx_from, radx_empty)
+export(radx, radx_from, radx_empty, getDeriv)
 S3method(print, radx)
 S3method(c, radx)
 

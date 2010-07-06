@@ -88,3 +88,23 @@ print.radx <- function (x) {
 c.radx <- function(...) {
     return(list(...))
 }
+
+# get the n-th order derivative of the m-th output function
+getDeriv <- function(x, n, m=1) {
+    if (class(x) != "radx")
+        stop("Error: getDeriv accepts only radx objects")
+
+    if (n > x$ord)
+        stop("Error: Requesting an order higher than computed")
+    if (n < 0)
+        stop("Error: Bad value for derivative order")
+
+    if (m > 1) {
+        coeff <- x$coeff[n + 1,m]
+    }
+    else {
+        coeff <- x$coeff[n + 1]
+    }
+
+    return(coeff * factorial(n))
+}
