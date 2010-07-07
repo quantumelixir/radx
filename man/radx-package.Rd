@@ -3,39 +3,58 @@
 \alias{radx}
 \docType{package}
 \title{
-What the package does (short line)
-~~ package title ~~
+Automatic Differentiation engine in R
 }
 \description{
-More about what it does (maybe more than one line)
-~~ A concise (1-5 lines) description of the package ~~
+Precise numerical evaluation of arbitrary order derivatives for
+functions of the form $f:R^m \to R^n$ through both forward
+and reverse mode Automatic Differentiation
 }
 \details{
-\tabular{ll}{
-Package: \tab radx\cr
-Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2010-05-16\cr
-License: \tab What license is it under?\cr
-LazyLoad: \tab yes\cr
+
+The main functions are:
+\preformatted{
+radx        Create objects of class radx. These store the truncated
+            Taylor series expansions which are propagated through
+            expressions to compute derivatives.
+
+getDeriv    Obtain the derivative from the taylor series coefficients
+            of a radx class expression.
+
+radxeval    Driver for computing arbitrary order derivatives of functions.
+            Yields a matrix with derivatives of each output function along
+            one column ordered by the multi-index corresponding to the
+            derivative they represent.
+
+convert2pos Convert a given set of multi-indices (a matrix with one
+            multi-index per row) to a vector of positional indices indicating
+            the location of the corresponding derivative in the output of radxeval.
+            Example: The mixed derivative (d^3 / dx^2 dy^1 dz^0)(f) has the
+            multi-index (2, 1, 0) whose positional index is 2. Thus, this
+            mixed derivative can be found along the second row of the matrix
+            in the output of radxeval.
 }
-~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-Who wrote it
-
-Maintainer: Who to complain to <yourfault@somewhere.net>
-~~ The author and/or maintainer of the package ~~
+Maintainer: Chidambaram Annamalai <quantumelixir@gmail.com>
 }
 \references{
-~~ Literature or other references for background information ~~
+    Griewank, A. and Walther, A. (2008) \emph{Evaluating derivatives: principles and techniques of algorithmic differentiation}. Society for Industrial and Applied Mathematics (SIAM)
+
+  Griewank, A. and Utke, J. and Walther, A., (2000) \emph{Evaluating higher derivative tensors by forward propagation of univariate Taylor series}. Journal of Mathematics of Computation, American Mathematical Society.
+
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
 \keyword{ package }
 \seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
+    \code{\link[<numDeriv>:<numDeriv>-package]{numDeriv}}
 }
 \examples{
-~~ simple examples of the most important functions ~~
+\dontrun{
+## run demos
+demo("univariate")
+demo("hessian")
+
+## open the directory with documents
+browseURL(paste(system.file(package="radx"), "/doc", sep=""))
+}
 }
