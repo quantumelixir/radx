@@ -12,6 +12,9 @@ Nbefore <- function(J, n, v, cur=0) {
 # each row of m (one multi-index) is converted to a position index
 # returning a vector of positional indices (as many as rows in m)
 convert2pos <- function(mat) {
+    if (class(mat) != "matrix")
+        mat <- matrix(mat, nrow=1)
+
 	M <- dim(mat)[1]
 	N <- dim(mat)[2]
     V <- sum(mat[1,])
