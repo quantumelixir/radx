@@ -1,7 +1,7 @@
 Package: radx
 Type: Package
 Title: Automatic Differentiation engine in R
-Version: 1.0
+Version: 0.1
 Date: 2010-05-16
 Author: Chidambaram Annamalai
 Maintainer: <quantumelixir@gmail.com>
